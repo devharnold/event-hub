@@ -26,6 +26,13 @@
     </properties>
 
     <dependencies>
+
+        <!-- Jakarta Persistence -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
         <!-- Spring Boot Web Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,7 +58,7 @@
             <version>1.62.2</version>
         </dependency>
 
-        <!-- Protocol Buffers -->
+        <!-- Protocol Bufers -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
@@ -59,6 +66,12 @@
         </dependency>
 
         <!-- Stand alone gRPC server -->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-common-spring-boot</artifactId>
+            <version>2.15.0.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>net.devh</groupId>
             <artifactId>grpc-common-spring-boot</artifactId>
@@ -86,30 +99,54 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- graphQL -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-graphql</artifactId>
-        </dependency>
-
         <!-- Spring Data JDBC -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.graphql</groupId>
-            <artifactId>spring-graphql-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Detect OS for protobuf plugin -->
+            <plugin>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!--Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- Protobuf compiler plugin -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <!-- <protocArtifact>com.google.protobuf:protoc:3.25.1:exe:${os.detected.classifier}</protocArtifact> -->
+                    <protocArtifact>com.google.protobuf:protoc:3.25.1:exe:${os.version}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <!-- <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.62.2:exe:${os.detected.classifier}</pluginArtifact> -->
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.62.2:exe:${os.version}</pluginArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
